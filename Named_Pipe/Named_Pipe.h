@@ -10,8 +10,6 @@
 
 #define DEFALT_PATH "Defalt_Pipe"
 
-using namespace std;
-
 class Named_Pipe
 {
 public:
@@ -19,14 +17,14 @@ public:
     Named_Pipe(const char* pipe_path);      // Constructor with pipe path argument
     ~Named_Pipe();                          // Destructor
 
-    void pWrite(string data);               // Function to write to the pipe
-    string pRead();                         // Function to read from the pipe
+    void pWrite(std::string data);               // Function to write to the pipe
+    std::string pRead();                         // Function to read from the pipe
     void getError();                        // Function to print error messages
     void pDelete();                         // Function to delete the pipe
 
 private:
-    ofstream pipeWR;                        // Output file stream for writing to the pipe
-    ifstream pipeRD;                        // Input file stream for reading from the pipe
+    std::ofstream pipeWR;                        // Output file stream for writing to the pipe
+    std::ifstream pipeRD;                        // Input file stream for reading from the pipe
     int erro;                               // Error code
     bool del_flag;                          // Flag to indicate if the pipe should be deleted on close
     const char* path;                       // Path to the pipe
