@@ -27,14 +27,14 @@ void Named_Pipe::pDelete()
         erro = 4;                           // Failed to delete pipe
 }
 
-void Named_Pipe::pWrite(string data)
+void Named_Pipe::pWrite(std::string data)
 {
                                             // Create pipe with permissions 0777
     if (mkfifo(path, 0777) == -1 && errno != EEXIST)           
         erro = 1;                           // Failed to create pipe
 
 
-    pipeWR.open(path, ios::out);            // Open pipe for writing
+    pipeWR.open(path, std::ios::out);            // Open pipe for writing
     
     if (!pipeWR.is_open())
         erro = 2;                           // Failed to open pipe for writing
@@ -52,14 +52,14 @@ void Named_Pipe::pWrite(string data)
         pDelete();                          // Delete pipe if delete flag is set
 }
 
-string Named_Pipe::pRead()
+std::string Named_Pipe::pRead()
 {
-    string msg;
+    std::string msg;
     
     if (mkfifo(path, 0777) == -1 && errno != EEXIST)
         erro = 1;                           // Failed to create pipe
 
-    pipeRD.open(path, ios::in);             // Open pipe for reading
+    pipeRD.open(path, std::ios::in);             // Open pipe for reading
     
     if (!pipeRD.is_open()) 
         erro = 2;                           // Failed to open pipe for reading
@@ -84,19 +84,19 @@ void Named_Pipe::getError()
     switch (erro)
     {
     case 1:
-        cerr << "[ERROR]: Failed to create the pipe\n";
+        std::cerr << "[ERROR]: Failed to create the pipe\n";
         break;
 
     case 2:
-        cerr << "[ERROR]: Failed to open the pipe\n";
+        std::cerr << "[ERROR]: Failed to open the pipe\n";
         break;
 
     case 3:
-        cerr << "[ERROR]: Failed to close the pipe\n";
+        std::cerr << "[ERROR]: Failed to close the pipe\n";
         break;
 
     case 4:
-        cerr << "[ERROR]: Failed to delete the pipe\n";
+        std::cerr << "[ERROR]: Failed to delete the pipe\n";
         break;
     
     default:
