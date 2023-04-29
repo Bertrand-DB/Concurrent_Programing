@@ -17,7 +17,7 @@ Atomic_Barrier::~Atomic_Barrier()
 
 void Atomic_Barrier::detain()
 {
-    unique_lock<mutex> lock(mtx_counter);    // Acquire the mutex to ensure mutual exclusion for the counter
+    std::unique_lock<std::mutex> lock(mtx_counter);    // Acquire the mutex to ensure mutual exclusion for the counter
 
     counter++;                              // Increment the counter for threads that have reached the barrier
     int expected = barrier_level.load();     // Get the current value of the barrier level
