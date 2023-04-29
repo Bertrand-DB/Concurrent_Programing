@@ -1,3 +1,4 @@
+//made by Bertrand -> https://github.com/Bertrand-DB
 #ifndef ATOMIC_BARRIER_H
 #define ATOMIC_BARRIER_H
 
