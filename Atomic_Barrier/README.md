@@ -1,6 +1,6 @@
 <h1>Atomic_Barrier</h1>
 
-<p>The AtomicBarrier class is responsible for <b>CREATING</b> a synchronization barrier for multiple threads, <b>DETECTING</b> and <b>WAITING</b> for all threads to reach the barrier, and <b>RELEASING</b> all threads once they reach the barrier.</p>
+<p>The Atomic_Barrier class is responsible for <b>CREATING</b> a synchronization barrier for multiple threads, <b>DETECTING</b> and <b>WAITING</b> for all threads to reach the barrier, and <b>RELEASING</b> all threads once they reach the barrier.</p>
 
 <h3>Its attributes are:</h3>
 <ul>
