@@ -1,3 +1,4 @@
+//made by Bertrand -> https://github.com/Bertrand-DB
 #include "Atomic_Barrier.h"
 
 Atomic_Barrier::Atomic_Barrier()
