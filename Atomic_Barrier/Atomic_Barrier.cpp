@@ -3,7 +3,7 @@
 
 Atomic_Barrier::Atomic_Barrier()
 {
-    barrier_level = INT32_MAX;      // Barrier level set to the maximum value of a 32-bit integer
+    barrier_level = __LONG_MAX__;      // Barrier level set to the maximum value of a long
 }
 
 Atomic_Barrier::Atomic_Barrier(unsigned barrier_level)
@@ -18,7 +18,7 @@ Atomic_Barrier::~Atomic_Barrier()
 
 void Atomic_Barrier::detain()
 {
-    std::unique_lock<std::mutex> lock(mtx_counter);    // Acquire the mutex to ensure mutual exclusion for the counter
+    std::unique_lock<std::mutex> lock(mutex_counter);    // Acquire the mutex to ensure mutual exclusion for the counter
 
     counter++;                              // Increment the counter for threads that have reached the barrier
     int expected = barrier_level.load();     // Get the current value of the barrier level
