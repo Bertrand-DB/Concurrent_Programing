@@ -3,14 +3,14 @@
 
 Named_Pipe::Named_Pipe()
 {
-    path = DEFAULT_PATH;                     // Use default pipe path
-    delete_flag = true;                        // Set delete flag to true by default
+    path = DEFAULT_PATH;
+    delete_flag = true;
 }
 
 Named_Pipe::Named_Pipe(const char* pipe_path)
 {
-    path = pipe_path;                       // Set pipe path to provided path
-    delete_flag = false;                       // Set delete flag to false by default
+    path = pipe_path;
+    delete_flag = false;
 }
 
 Named_Pipe::~Named_Pipe()
