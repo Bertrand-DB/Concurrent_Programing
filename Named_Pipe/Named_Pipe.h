@@ -8,27 +8,28 @@
 #include <errno.h>
 #include <cstring>
 
-#define DEFALT_PATH "Defalt_Pipe"
+#define DEFAULT_PATH "Default_Pipe"
+#define DIDNT_CREATE -1
+#define DONT_EXIST errno != EEXIST
+#define READWRITE_MODE 0777
 
 class Named_Pipe
 {
 public:
-    Named_Pipe();                           // Constructor without arguments
-    Named_Pipe(const char* pipe_path);      // Constructor with pipe path argument
-    ~Named_Pipe();                          // Destructor
+    Named_Pipe();
+    Named_Pipe(const char* pipe_path);
+    ~Named_Pipe();
 
-    void pWrite(std::string data);               // Function to write to the pipe
-    std::string pRead();                         // Function to read from the pipe
-    void getError();                        // Function to print error messages
-    void pDelete();                         // Function to delete the pipe
+    void pipeWrite(std::string data);
+    std::string pipeRead();
+    void pipeDelete();
 
 private:
-    std::ofstream pipeWR;                        // Output file stream for writing to the pipe
-    std::ifstream pipeRD;                        // Input file stream for reading from the pipe
-    int erro;                               // Error code
-    bool del_flag;                          // Flag to indicate if the pipe should be deleted on close
-    const char* path;                       // Path to the pipe
+    std::string getErrorDetails();
 
+    std::ofstream writingStream;
+    std::ifstream readingStream;
+    bool delete_flag;
+    const char* path;
 };
-
 #endif
