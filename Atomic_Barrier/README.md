@@ -1,30 +1,46 @@
-<h1>Atomic_Barrier</h1>
+<h1>Atomic_Barrier Class Documentation</h1>
 
-<p>The Atomic_Barrier class is responsible for <b>CREATING</b> a synchronization barrier for multiple threads, <b>DETECTING</b> and <b>WAITING</b> for all threads to reach the barrier, and <b>RELEASING</b> all threads once they reach the barrier.</p>
+<h1>Class Description</h1>
+<p>The Atomic_Barrier class is a synchronization primitive that allows a group of threads to synchronize the execution of a particular code segment. The class provides a mechanism for threads to wait at a barrier until a specified number of threads have reached the barrier, at which point all threads are released.</p>
 
-<h3>Its attributes are:</h3>
+<h2>Public Members</h2>
+
+<h3><code>Atomic_Barrier()</code></h3>
+<p>The default constructor for the Atomic_Barrier class. Sets the barrier level to the maximum value of a 64 bit unsigned int.</p>
+
+<h3><code>Atomic_Barrier(unsigned barrier_level)</code></h3>
+<p>A constructor that allows the barrier level to be set to a specific value.</p>
+<p>Parameters:</p>
 <ul>
-  <li>an atomic integer barrier_level (for defining the number of threads to wait for);</li>
-  <li>an atomic integer counter (for counting the number of threads that reached the barrier);</li>
-  <li>an atomic boolean releaser (for signaling the threads to be released from the barrier);</li>
-  <li>a mutex mtx_counter (for protecting the counter attribute);</li>
-  <li>a condition variable detainer (for notifying the threads that the barrier has been reached).</li>
-</ul>
-  
-<h3>The methods include:</h3>
-<ul>
-  <li>A default constructor that sets the barrier level to INT32_MAX (maximum integer value).</li>
-  <li>A constructor that allows for defining a specific barrier level.</li>
-  <li>A default destructor.</li>
-  <li>A method <b>detain()</b> that adds the current thread to the counter, detects if all threads reached the barrier, signals the releaser if so, and waits for the releaser to release the threads.</li>
-  <li>A method <b>detained()</b> that returns the current number of threads that reached the barrier.</li>
-  <li>A method <b>release()</b> that signals the releaser to release the threads.</li>
+	<li><code>barrier_level</code>: The number of threads required to reach the barrier before the threads are released.</li>
 </ul>
 
-<h3>The libraries used:</h3>
-<ul>
-  <li>iostream</li>
-  <li>atomic</li>
-  <li>mutex</li>
-  <li>condition_variable</li>
-</ul>
+<h3><code>~Atomic_Barrier()</code></h3>
+<p>The destructor for the Atomic_Barrier class.</p>
+
+<h3><code>void detain()</code></h3>
+<p>A member function that causes the calling thread to wait at the barrier until a specified number of threads have reached the barrier, at which point all threads are released.</p>
+
+<h3><code>unsigned detained()</code></h3>
+<p>A member function that returns the current number of threads that are waiting at the barrier.</p>
+
+<h3><code>void release()</code></h3>
+<p>A member function that releases all threads waiting at the barrier.</p>
+
+<h2>Private Members</h2>
+<p>The following member variables are private and cannot be accessed directly from outside the class.</p>
+
+<h3><code>std::atomic&lt;int&gt; barrier_level</code></h3>
+<p>A private member variable that holds the number of threads required to reach the barrier before the threads are released.</p>
+
+<h3><code>std::atomic&lt;int&gt; counter</code></h3>
+<p>A private member variable that counts the number of threads that have reached the barrier.</p>
+
+<h3><code>std::atomic&lt;bool&gt; releaser</code></h3>
+<p>A private member variable that indicates whether the barrier has been released.</p>
+
+<h3><code>std::mutex mtx_counter</code></h3>
+<p>A private member variable that provides mutual exclusion for the counter member variable.</p>
+
+<h3><code>std::condition_variable detainer</code></h3>
+<p>A private member variable that provides a condition variable for threads waiting at the barrier.</p>
