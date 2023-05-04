@@ -3,7 +3,7 @@
 
 Atomic_Barrier::Atomic_Barrier()
 {
-    barrier_level = __LONG_MAX__;      // Barrier level set to the maximum value of a long
+    barrier_level = UINT64_MAX;      // Barrier level set to the maximum value of a 64 bit unsigned int
 }
 
 Atomic_Barrier::Atomic_Barrier(unsigned barrier_level)
