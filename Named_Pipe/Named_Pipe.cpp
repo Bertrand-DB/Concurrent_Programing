@@ -3,16 +3,14 @@
 
 Named_Pipe::Named_Pipe()
 {
-    path = DEFALT_PATH;                     // Use default pipe path
-    del_flag = true;                        // Set delete flag to true by default
-    erro = 0;                               // Set error code to 0 by default
+    path = DEFAULT_PATH;                     // Use default pipe path
+    delete_flag = true;                        // Set delete flag to true by default
 }
 
 Named_Pipe::Named_Pipe(const char* pipe_path)
 {
     path = pipe_path;                       // Set pipe path to provided path
-    del_flag = false;                       // Set delete flag to false by default
-    erro = 0;                               // Set error code to 0 by default
+    delete_flag = false;                       // Set delete flag to false by default
 }
 
 Named_Pipe::~Named_Pipe()
@@ -20,88 +18,111 @@ Named_Pipe::~Named_Pipe()
 
 }
 
-
-void Named_Pipe::pDelete()
+std::string Named_Pipe::getErrorDetails()
 {
-    if (remove(path) == -1)
-        erro = 4;                           // Failed to delete pipe
+    std::string error;
+    
+    switch (errno) {
+        case EBUSY:
+            error = " (Resource busy)";
+            break;
+        case EACCES:
+            error = " (Permission denied)";
+            break;
+        case ENOENT:
+            error = " (No such file or directory)";
+            break;
+        case EINVAL:
+            error = " (Invalid argument)";
+            break;
+        case ENXIO:
+            error = " (No such device or address)";
+            break;
+        case EIO:
+            error = " (Input/output error)";
+            break;
+        case EINTR:
+            error = " (Interrupted function call)";
+            break;
+        default:
+            error = " (Unknown error)";
+            break;
+    }
+    return error;
 }
 
-void Named_Pipe::pWrite(std::string data)
+void Named_Pipe::pipeDelete()
 {
-                                            // Create pipe with permissions 0777
-    if (mkfifo(path, 0777) == -1 && errno != EEXIST)           
-        erro = 1;                           // Failed to create pipe
-
-
-    pipeWR.open(path, std::ios::out);            // Open pipe for writing
-    
-    if (!pipeWR.is_open())
-        erro = 2;                           // Failed to open pipe for writing
-
- 
-    pipeWR << data;                         // Write data to the pipe
-
-  
-    pipeWR.close();                         // Close pipe for writing
-
-    if (pipeWR.is_open()) 
-        erro = 3;                           // Failed to close pipe for writing
-    
-    if(del_flag)
-        pDelete();                          // Delete pipe if delete flag is set
-}
-
-std::string Named_Pipe::pRead()
-{
-    std::string msg;
-    
-    if (mkfifo(path, 0777) == -1 && errno != EEXIST)
-        erro = 1;                           // Failed to create pipe
-
-    pipeRD.open(path, std::ios::in);             // Open pipe for reading
-    
-    if (!pipeRD.is_open()) 
-        erro = 2;                           // Failed to open pipe for reading
-
-  
-    getline(pipeRD, msg);                   // Read from the pipe
-
-  
-    pipeRD.close();                         // Close pipe for reading
-
-    if (pipeRD.is_open())
-        erro = 3;                           // Failed to close pipe for reading
-
-    if (del_flag)
-        pDelete();                          // Delete pipe if delete flag is set
-    
-    return msg;                             // Return read data
-}
-
-void Named_Pipe::getError()
-{
-    switch (erro)
+    try
     {
-    case 1:
-        std::cerr << "[ERROR]: Failed to create the pipe\n";
-        break;
-
-    case 2:
-        std::cerr << "[ERROR]: Failed to open the pipe\n";
-        break;
-
-    case 3:
-        std::cerr << "[ERROR]: Failed to close the pipe\n";
-        break;
-
-    case 4:
-        std::cerr << "[ERROR]: Failed to delete the pipe\n";
-        break;
-    
-    default:
-        break;
+        if (remove(path))
+            throw "[EXCEPTION] Failed to delete the pipe";
+    }
+    catch(const char* generic_error)
+    {
+        std::string error_messege = generic_error + getErrorDetails() + "\n";
+        std::cerr << error_messege;
     }
 }
 
+void Named_Pipe::pipeWrite(std::string data)
+{
+    try
+    {
+        if (mkfifo(path, READWRITE_MODE) == DIDNT_CREATE && DONT_EXIST)
+        throw "[EXCEPTION] Failed to create the pipe";
 
+        writingStream.open(path, std::ios::out);
+    
+        if (!writingStream.is_open())
+            throw "[EXCEPTION] Failed to open the pipe for writing";
+
+        writingStream << data;
+
+        writingStream.close();
+
+        if (writingStream.is_open()) 
+            throw "[EXCEPTION] Failed to close the pipe after writing";
+    
+        if(delete_flag)
+            pipeDelete();
+    }
+    catch(const char* generic_error)
+    {
+        std::string error_messege = generic_error + getErrorDetails() + "\n";
+        std::cerr << error_messege;
+    }
+}
+
+std::string Named_Pipe::pipeRead()
+{
+    std::string data;
+    
+    try
+    {
+        if (mkfifo(path, READWRITE_MODE) == DIDNT_CREATE && DONT_EXIST)
+            throw "[EXCEPTION] Failed to create the pipe";
+
+        readingStream.open(path, std::ios::in);
+        
+        if (!readingStream.is_open()) 
+            throw "[EXCEPTION] Failed to open the pipe for reading";
+
+        getline(readingStream, data);
+    
+        readingStream.close();
+
+        if (readingStream.is_open())
+            throw "[EXCEPTION] Failed to close the pipe after reading";
+
+        if (delete_flag)
+            pipeDelete();
+    }
+    catch(const char* generic_error)
+    {
+        std::string error_messege = generic_error + getErrorDetails() + "\n";
+        std::cerr << error_messege;
+        return "ERROR!";
+    }
+    return data;
+}
