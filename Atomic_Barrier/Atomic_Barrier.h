@@ -23,7 +23,7 @@ private:
     std::atomic<int> barrier_level;      // Barrier level (number of threads required for release)
     std::atomic<int> counter;            // Counter for threads that have reached the barrier
     std::atomic<bool> releaser;          // Flag to indicate barrier release
-    std::mutex mtx_counter;              // Mutex to provide mutual exclusion for the counter
+    std::mutex mutex_counter;              // Mutex to provide mutual exclusion for the counter
     std::condition_variable detainer;    // Condition variable to wait for barrier release
 };
 #endif
