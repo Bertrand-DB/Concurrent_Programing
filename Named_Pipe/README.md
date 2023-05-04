@@ -1,36 +1,54 @@
-<h1>Named_Pipe</h1>
+<h1>Named_Pipe Class Documentation</h1>
 
-<p>The Named_Pipe class is responsible for <b>CREATING</b> a named pipe, <b>WRITING</b> data to it, <b>READING</b> data from it, <b>CHECKING ERRORS</b>, and <b>DELETING</b> the pipe.</p>
+<h1>Class Description</h1>
+<p>The Named_Pipe class simplifies inter-process communication using named pipes by abstracting the communication details and providing an intuitive interface for multiple processes to safely read and write to the same pipe.</p>
 
-<h3>Its attributes are:</h3>
+<h2>Public Members</h2>
+
+<h3><code>Named_Pipe()</code></h3>
+<p>The default constructor for the Named_Pipe class, which sets the file path to the current directory with a default name that will be automatically deleted.</p>
+
+<h3><code>Named_Pipe(const char* pipe_path)</code></h3>
+<p>A constructor that creates a named pipe with the given path and name.</p>
+<p>Parameters:</p>
 <ul>
-  <li>an ofstream pipeWR (for writing);</li>
-  <li>an ifstream pipeRD (for reading);</li>
-  <li>an integer error (for storing errors);</li>
-  <li>a bool del_flag (for checking if the pipe should be deleted after execution).</li>
-</ul>
-  
-<h3>The methods include:</h3>
-<ul>
-  <li>A default constructor that allows for the deletion of the named pipe after execution and creates the file in the same directory.</li>
-  <li>A constructor that keeps the named pipe after execution and creates the file in the defined directory.</li>
-  <li>A default destructor.</li>
-  <li>A method <b>pDelete()</b> that removes the created pipe.</li>
-  <li>A method <b>pWrite(string data)</b> that writes a string to the pipe.</li>
-  <li>A method <b>pRead()</b> that reads a string from the pipe.</li>
-  <li>A method <b>getError()</b> that prints an error message based on the error code stored in the error attribute.</li>
+	<li><code>pipe_path</code>: The path and/or name of the pipe, like "/directory1/directory2/pipe_name" or just "pipe_name".</li>
 </ul>
 
-<h3>The libraries used:</h3>
+<h3><code>~Named_Pipe()</code></h3>
+<p>The destructor for the Named_Pipe class. Closes the named pipe if it is open.</p>
+
+<h3><code>void pipeWrite(std::string data)</code></h3>
+<p>A member function that writes data to the named pipe.</p>
+<p>Parameters:</p>
 <ul>
-  <li>iostream</li>
-  <li>fstream</li>
-  <li>sys/stat.h</li>
-  <li>errno.h</li>
-  <li>cstring</li>
+	<li><code>data</code>: The data to be written to the pipe. It must pass only one line at a time, just as the reading is done.</li>
 </ul>
 
-<h3>The defined constants:</h3>
- <ul>
-   <li>DEFAULT_PATH (default value for the named pipe's path)</li>
- </ul>
+<h3><code>std::string pipeRead()</code></h3>
+<p>A member function that reads data from the named pipe.</p>
+<p>Returns:</p>
+<ul>
+	<li>The data read from the pipe as a string.</li>
+</ul>
+
+<h3><code>void pipeDelete()</code></h3>
+<p>A member function that deletes the named pipe.</p>
+
+<h2>Private Members</h2>
+<p>The following member variables are private and cannot be accessed directly from outside the class.</p>
+
+<h3><code>std::string getErrorDetails()</code></h3>
+<p>A private member function that returns detailed error information.</p>
+
+<h3><code>std::ofstream writingStream</code></h3>
+<p>A private member variable that represents the output stream for writing to the named pipe.</p>
+
+<h3><code>std::ifstream readingStream</code></h3>
+<p>A private member variable that represents the input stream for reading from the named pipe.</p>
+
+<h3><code>bool delete_flag</code></h3>
+<p>A private member variable that indicates whether the named pipe should be deleted after use.</p>
+
+<h3><code>const char* path</code></h3>
+<p>A private member variable that holds the path of the named pipe.</p>
