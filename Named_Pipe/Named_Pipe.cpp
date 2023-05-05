@@ -51,6 +51,23 @@ std::string Named_Pipe::getErrorDetails()
     return error;
 }
 
+std::string Named_Pipe::reader()
+{
+    std::string data, buffer;
+    int counter = 0;
+
+    while (getline(readingStream, buffer))
+    {
+        data += buffer + "\n";
+        ++counter;
+
+        if (LIMIT_REACHED && !UNTIL_EOF)
+            break;
+    }
+
+    return data;
+}
+
 void Named_Pipe::pipeDelete()
 {
     try
@@ -65,20 +82,20 @@ void Named_Pipe::pipeDelete()
     }
 }
 
-void Named_Pipe::pipeWrite(std::string data)
+void Named_Pipe::write_string(std::string data)
 {
     try
     {
         if (mkfifo(path, READWRITE_MODE) == DIDNT_CREATE && DONT_EXIST)
-        throw "[EXCEPTION] Failed to create the pipe";
+            throw "[EXCEPTION] Failed to create the pipe";
 
         writingStream.open(path, std::ios::out);
     
         if (!writingStream.is_open())
             throw "[EXCEPTION] Failed to open the pipe for writing";
-
+        
         writingStream << data;
-
+        
         writingStream.close();
 
         if (writingStream.is_open()) 
@@ -94,10 +111,9 @@ void Named_Pipe::pipeWrite(std::string data)
     }
 }
 
-std::string Named_Pipe::pipeRead()
+std::string Named_Pipe::reading_manager()
 {
-    std::string data;
-    
+    std::string data = "ERROR!";
     try
     {
         if (mkfifo(path, READWRITE_MODE) == DIDNT_CREATE && DONT_EXIST)
@@ -107,8 +123,8 @@ std::string Named_Pipe::pipeRead()
         
         if (!readingStream.is_open()) 
             throw "[EXCEPTION] Failed to open the pipe for reading";
-
-        getline(readingStream, data);
+        
+        data = reader();
     
         readingStream.close();
 
@@ -122,7 +138,18 @@ std::string Named_Pipe::pipeRead()
     {
         std::string error_messege = generic_error + getErrorDetails() + "\n";
         std::cerr << error_messege;
-        return "ERROR!";
     }
     return data;
+}
+
+std::string Named_Pipe::read_line(const unsigned int number_of_lines)
+{
+    this->number_of_lines = number_of_lines;
+    return reading_manager();
+}
+
+std::string Named_Pipe::read_all()
+{
+    number_of_lines = EOF;
+    return reading_manager();
 }
